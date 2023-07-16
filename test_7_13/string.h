@@ -203,6 +203,24 @@ namespace lzb
 			}
 			return tmp;
 		}
+		void resize(size_t n,char ch='\0')
+		{
+			if (n < _size)
+			{
+				_size = n;
+				_str[_size] = '\0';
+			}
+			else
+			{
+				reserve(n);
+				for (size_t i = _size; i < n; ++i)
+				{
+					_str[i] = ch;
+				}
+				_size = n;
+				_str[_size] = '\0';
+			}
+		}
 	private:
 		char* _str;
 		size_t _size;

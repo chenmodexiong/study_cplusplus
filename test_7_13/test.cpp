@@ -111,15 +111,8 @@ void TestString6()
 	//std::cout << s1.find("String", 1) << std::endl;
 	//std::cout << s1.find("find", 1) << std::endl;
 	// 
-	// 
 	//substr切割字符串
 	//配合find完成切割的功能 
-	// 
-	//string s1 = "https://legacy.cplusplus.com/reference/string/string/substr/";
-	//string s2;
-	//s2=s1.substr(0,s1.find("://"));
-	//cout << s2 << endl;
-	// 
 	using namespace std;
 	lzb::string url = "https://legacy.cplusplus.com/reference/string/string/substr/";
 	// 协议 域名 资源名
@@ -137,8 +130,31 @@ void TestString6()
 	}
 	lzb::string uri = url.substr(pos2 + 1);
 	cout << uri.c_str() << endl;
+}
+
+void TestString7()
+{
+	std::string s1("TestStringResize");
+	std::cout << s1.c_str() << std::endl;
+	s1.resize(4);
+	std::cout << s1.c_str() << std::endl;
+	s1.resize(10,'#');
+	std::cout << s1.c_str() << std::endl;
+	s1.resize(20);
+	std::cout << s1.c_str() << std::endl;
+	std::cout << "==============================================" << std::endl;
+	lzb::string s2("TestStringResize");
+	std::cout << s2.c_str() << std::endl;
+	s2.resize(4);
+	std::cout << s2.c_str() << std::endl;
+	s2.resize(10, '#');
+	std::cout << s2.c_str() << std::endl;
+	s2.resize(20);
+	std::cout << s2.c_str() << std::endl;
 
 }
+
+
 int main()
 {
 	//TestString1();
@@ -146,6 +162,7 @@ int main()
 	//TestString3();
 	//TestString4();
 	//TestString5();
-	TestString6();
+	//TestString6();
+	TestString7();
 	return 0;
 }
