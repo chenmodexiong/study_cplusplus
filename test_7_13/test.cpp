@@ -155,6 +155,73 @@ void TestString7()
 }
 
 
+using std::cout;
+using std::endl;
+void TestString8()
+{
+	lzb::string s1("hello world");
+	cout << s1 << endl;
+	//cout << s1.c_str() << endl;
+	lzb::string s2("hello world");
+	s2 += '\0';
+	s2 += "you can see me!!";
+	cout << s2 << endl;
+}
+
+using std::cin;
+void TestString9()
+{
+	cout << "TestStringOperator>>" << endl;
+	cout << "======================================" << endl;
+	/*lzb::string s1;
+	cin >> s1;
+	cout << s1;*/
+
+	//std::string s2;
+	//lzb::string s2;
+	//cin >> s2;
+	//cout << s2 << endl;
+	////s2.clear();
+	//cin >> s2;
+	//cout << s2 << endl;
+
+	lzb::string s3;
+	cin >> s3;
+	cout << s3 << endl;
+
+}
+
+void TestString10()
+{
+	lzb::string s1("hello");
+	lzb::string s2("helloxxx");
+	cout << s1 << "\n" << s2 << endl;
+	cout << std::boolalpha << (s1 < s2) << endl;
+	cout << std::boolalpha << (s1 > s2) << endl;
+	cout << std::boolalpha << (s1 == s2) << endl;
+	cout << "===================================================" << endl;
+	lzb::string s3("helloxxx");
+	lzb::string s4("hello");
+	cout << s3 << "\n" << s4 << endl;
+	cout << std::boolalpha << (s3 < s4) << endl;
+	cout << std::boolalpha << (s3 > s4) << endl;
+	cout << std::boolalpha << (s3 == s4) << endl;
+	cout << "===================================================" << endl;
+	lzb::string s5("hello");
+	lzb::string s6("hello");
+	cout << s5 << "\n" << s6 << endl;
+	cout << std::boolalpha << (s5 < s6) << endl;
+	cout << std::boolalpha << (s5 > s6) << endl;
+	cout << std::boolalpha << (s5 == s6) << endl;
+}
+
+void TestString11()
+{
+	lzb::string s1("hello wolrd");
+	lzb::string s2(s1);
+	cout << s2;
+
+}
 int main()
 {
 	//TestString1();
@@ -163,6 +230,13 @@ int main()
 	//TestString4();
 	//TestString5();
 	//TestString6();
-	TestString7();
+	//TestString7();
+	//TestString8();
+	//TestString9();
+	//TestString10();
+	TestString11();
+
+
+
 	return 0;
 }

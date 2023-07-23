@@ -13,7 +13,8 @@ namespace lzb
 			_size = strlen(str);
 			_capacity = _size;
 			_str = new char[_capacity+1];
-			strcpy(_str, str);
+			//strcpy(_str, str);
+			memcpy(_str, str,_size+1);
 		}
 		//清理
 		~string()
@@ -26,9 +27,44 @@ namespace lzb
 		string(const string& s)
 		{
 			_str = new char[s._capacity + 1];
-			strcpy(_str, s._str);
+			//strcpy(_str, s._str);
+			memcpy(_str, s._str, s._size + 1);
 			_size = s._size;
 			_capacity = s._capacity;
+		}
+		//赋值
+		void swap(string& s)
+		{
+			std::swap(_str, s._str);
+			std::swap(_size, s._size);
+			std::swap(_capacity, s._capacity);
+		}
+		//全自动赋值
+		string& operator=(string tmp)
+		{
+			swap(tmp);
+			return *this;
+		}
+		string& operator=(const string& s)
+		{
+			if (this != &s)
+			{
+				/* 聪明人写法 */
+				string tmp(s);
+				swap(tmp);
+				/*std::swap(_str, tmp._str);
+				std::swap(_size, tmp._size);
+				std::swap(_capacity,tmp._capacity);*/
+
+				/* 正常传统写法 */
+				//char* tmp = new char[s._capacity + 1];
+				//memcpy(tmp, s._str, s._size + 1);
+				//delete[] _str;
+				//_str = tmp;
+				//_size = s._size;
+				//_capacity = s._capacity;
+			}
+			return *this;
 		}
 		//基础功能:返回内容,有效元素个数,支持下标访问
 		const char* c_str() const
@@ -73,8 +109,10 @@ namespace lzb
 		{
 			if (n > _capacity)
 			{
+				std::cout << "reserve()->" << n << std::endl;
 				char* tmp = new char[n + 1];
-				strcpy(tmp, _str);
+				//strcpy(tmp, _str);
+				memcpy(tmp, _str,_size+1);
 				delete[] _str;
 				_str = tmp;
 				_capacity = n;
@@ -96,7 +134,8 @@ namespace lzb
 			{
 				reserve(_size + len);
 			}
-			strcpy(_str + _size, str);
+			//strcpy(_str + _size, str); 
+			memcpy(_str + _size, str,len+1);
 			_size += len;
 		}
 		string& operator+=(char ch)
@@ -221,6 +260,51 @@ namespace lzb
 				_str[_size] = '\0';
 			}
 		}
+		void clear()
+		{
+			_str[0] = '\0';
+			_size = 0;
+		}
+		//比较大小
+		bool operator<(const lzb::string& s) const
+		{
+			//直接用库函数
+			//int ret = memcmp(_str, s._str, _size < s._size ? _size : s._size);
+			//return ret == 0 ? _size < s._size : ret < 0;
+			//自己实现
+			size_t i1 = 0, i2 = 0;
+			while (i1 < _size && i2 < s._size)
+			{
+				if (_str[i1] < s._str[i2])
+					return true;
+				else if (_str[i1] > s._str[i2])
+					return false;
+				else
+					++i1, ++i2;
+			}
+			return _size < s._size;
+		}
+		bool operator==(const lzb::string& s) const
+		{
+			return _size == s._size && memcmp(_str, s._str, _size) == 0;
+		}
+		bool operator<=(const lzb::string& s) const
+		{
+			return *this < s || *this == s;
+		}
+		bool operator>(const lzb::string s) const
+		{
+			return !(*this <= s);
+		}
+		bool operator>=(const lzb::string s) const
+		{
+			return !(*this < s);
+		}
+		bool operator!=(const lzb::string s) const
+		{
+			return !(*this == s);
+		}
+
 	private:
 		char* _str;
 		size_t _size;
@@ -231,5 +315,55 @@ namespace lzb
 	};
 	const size_t string::npos = -1;
 }
+
+std::ostream& operator<<(std::ostream& out, const lzb::string s)
+{
+	//std::cout << s.c_str();
+
+	/*for (size_t i = 0; i < s.size(); ++i)
+	{
+		std::cout << s[i] ;
+	}*/
+
+	for (auto e : s)
+	{
+		std::cout << e;
+	}
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, lzb::string& s)
+{
+	s.clear();
+	char ch = in.get();
+	//清除输入流中的缓冲区(一开始的空格换行问题)
+	while (ch == ' ' || ch == '\n')
+	{
+		ch = in.get();
+	}
+	char buff[128];//暂存临时数据，避免频繁扩容
+	int i = 0;
+	while (ch != ' ' && ch != '\n')
+	{
+		buff[i++] = ch;
+		if (i == 127)
+		{
+			buff[i] = '\0';
+			s += buff;
+			i = 0;
+		}
+		ch = in.get();
+	}
+	if (i != 0)
+	{
+		buff[i] = '\0';
+		s += buff;
+	}
+
+	return in;
+}
+
+
+
 
 
