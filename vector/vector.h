@@ -1,14 +1,36 @@
 #pragma once
-
+#include <iostream>
+#include <cassert>
+using std::cout;
+using std::endl;
 namespace lzb
 {
 	template<class T>
 	class vector
 	{
+	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
 	public:
-		vector<> : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr){}
+		vector() : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr) {}
+
+		iterator begin()
+		{
+			return _start;
+		}
+		iterator end()
+		{
+			return _finish ;
+		}
+		const_iterator begin() const
+		{
+			return _start;
+		}
+		const_iterator end() const
+		{
+			return _finish;
+		}
+
 		void reserve(size_t n)
 		{
 			if (n > capacity())
@@ -27,13 +49,35 @@ namespace lzb
 		}
 		void push_back(const T& x)
 		{
-			if (_finish == _end_of_storage)
+		  /*if (_finish == _end_of_storage)
 			{
 				size_t newcapacity = capacity() == 0 ? 4 : capacity() * 2;
 				reserve(newcapacity);
 			}
 			*_finish = x;
+			++_finish;*/
+			insert(end(), x);
+		}
+		iterator insert(iterator pos, const T& x)
+		{
+			assert(pos >= _start && pos <= _finish);
+			if (_finish == _end_of_storage)
+			{
+				size_t len = pos - _start;
+				size_t newcapacity = capacity() == 0 ? 4 : capacity() * 2;
+				reserve(newcapacity);
+				//迭代器失效问题
+				pos = _start + len;
+			}
+			iterator end = _finish - 1;
+			while (end >= pos)
+			{
+				*(end + 1) = *end;
+				--end;
+			}
+			*pos = x;
 			++_finish;
+			return pos;
 		}
 
 		size_t capacity()
@@ -43,6 +87,17 @@ namespace lzb
 		size_t size()
 		{
 			return _finish - _start;
+		}
+
+		T& operator[](size_t pos)
+		{
+			assert(pos < size());
+			return _start[pos];
+		}
+		const T& operator[](size_t pos) const
+		{
+			assert(pos < size());
+			return _start[pos]; 
 		}
 
 		~vector()
@@ -60,5 +115,75 @@ namespace lzb
 		iterator _end_of_storage;
 	};
 
+	void print(const vector<int>& v)
+	{
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << "\n=======================================" << endl;
+	}
 
+	void test_vector2()
+	{
+		//vector<int> v2;
+		//v2.push_back(1);
+		//v2.push_back(2);
+		//v2.push_back(3);
+		//v2.push_back(4);
+		//v2.push_back(5);
+		//v2.insert(v2.begin(), 100);
+		//print(v2);
+		//v2.insert(v2.begin()+2, 200);
+		//print(v2);
+		//v2.insert(v2.end(), 500);
+		//print(v2);
+
+		//insert后迭代器可能失效,原因:扩容
+		vector<int> v3;
+		v3.push_back(1);
+		v3.push_back(2);
+		v3.push_back(3);
+		v3.push_back(4);
+		v3.push_back(5);
+		v3.push_back(6);
+		v3.push_back(7);
+		//v3.push_back(8);
+		vector<int>::iterator p = v3.begin();
+		v3.insert(p+1, 100);
+		print(v3);
+		*p+=10;//迭代器失效
+		print(v3);
+
+	}
+
+	void test_vector1()
+	{
+		vector<int> v1;
+		v1.push_back(1);
+		v1.push_back(2);
+		v1.push_back(3);
+		v1.push_back(4);
+		v1.push_back(5);
+		v1.push_back(6);
+		v1.push_back(7);
+		for (auto e : v1)
+		{
+			cout << e << " ";
+		}
+		cout << "\n=======================================" << endl;
+		lzb::vector<int>::iterator it = v1.begin();
+		while (it != v1.end())
+		{
+			cout << *it << " ";
+			++it;
+		}
+		cout << "\n=======================================" << endl;
+		for (size_t i = 0; i < v1.size(); ++i)
+		{
+			v1[i]++;
+		}
+		print(v1);
+
+	}
 }
