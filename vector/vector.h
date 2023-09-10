@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <cassert>
+#include <cstring>
+#include <string>
 using std::cout;
 using std::endl;
 namespace lzb
@@ -13,6 +15,54 @@ namespace lzb
 		typedef const T* const_iterator;
 	public:
 		vector() : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr) {}
+
+		vector(size_t n,const T& x=T())
+			:_start(nullptr), _finish(nullptr), _end_of_storage(nullptr) {}
+		{
+			resize(n, x);
+		}
+
+		template<class InputIterator>
+		vector(InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				push_back(*first);
+				++first;
+			}
+		}
+
+		vector(const vector<T>& v)
+			:_start(nullptr), _finish(nullptr), _end_of_storage(nullptr)
+		{
+			_start = new T[v.capacity()];
+			memmove(_start, v._start, sizeof(T) * v.size());
+			_finish = _start + v.size();
+			_end_of_storage = _start + v.capacity();
+		}
+
+		//拷贝构造的另一种写法
+		/*vector(const vector<T>& v)
+			:_start(nullptr),_finish(nullptr),_end_of_storage(nullptr)
+		{
+			reserve(v.capacity());
+			for (auto e : v)
+			{
+				push_back(e);
+			}
+		}*/
+		
+		void swap(vector<T>& v)
+		{
+			std::swap(_start, v._start);
+			std::swap(_finish, v._finish);
+			std::swap(_end_of_storage, v._end_of_storage);
+		}
+		vector<T>& operator=(vector<T> v)
+		{
+			swap(v);
+			return *this;
+		}
 
 		iterator begin()
 		{
@@ -39,7 +89,13 @@ namespace lzb
 				T* tmp = new T[n];
 				if (_start)
 				{
-					memcpy(tmp, _start, sizeof(T) * sz);
+					//不管memcpy或者memmove都是浅拷贝，涉及到自定义类型都会崩溃
+					//memmove(tmp, _start, sizeof(T) * sz);
+					
+					for (size_t i = 0; i < sz; ++i)
+					{
+						tmp[i] = _start[i];
+					}
 					delete[] _start;
 				}
 				_start = tmp;
@@ -49,14 +105,18 @@ namespace lzb
 		}
 		void push_back(const T& x)
 		{
-		  /*if (_finish == _end_of_storage)
-			{
-				size_t newcapacity = capacity() == 0 ? 4 : capacity() * 2;
-				reserve(newcapacity);
-			}
-			*_finish = x;
-			++_finish;*/
+			/*if (_finish == _end_of_storage)
+			  {
+				  size_t newcapacity = capacity() == 0 ? 4 : capacity() * 2;
+				  reserve(newcapacity);
+			  }
+			  *_finish = x;
+			  ++_finish;*/
 			insert(end(), x);
+		}
+		void pop_back()
+		{
+			erase(--end());
 		}
 		iterator insert(iterator pos, const T& x)
 		{
@@ -98,6 +158,36 @@ namespace lzb
 		{
 			assert(pos < size());
 			return _start[pos]; 
+		}
+
+		iterator erase(iterator pos)
+		{
+			assert(pos >= _start && pos < _finish);
+			iterator it = pos + 1;
+			while (it != _finish)
+			{
+				*(it - 1) = *it;
+				++it;
+			}
+			--_finish;
+			return pos;
+		}
+
+		void resize(size_t n,const T& val=T())//匿名对象
+		{
+			if (n < size())
+			{
+				_finish = _start + n;
+			}
+			else
+			{
+				reserve(n);
+				while (_finish != _start + n)
+				{
+					*_finish = val;
+					++_finish;
+				}
+			}
 		}
 
 		~vector()
@@ -186,4 +276,29 @@ namespace lzb
 		print(v1);
 
 	}
+	void test_vector3()
+	{
+		//vector<int> v1;
+		//v1.push_back(1);
+		//v1.push_back(2);
+		//v1.push_back(3);
+		//v1.push_back(4);
+		//v1.push_back(5);
+		//print(v1);
+		//v1.erase(v1.begin());
+		//print(v1);
+
+		vector<std::string> v;
+		v.push_back("11111111111111111111111");
+		v.push_back("22222222222222222222222");
+		v.push_back("33333333333333333333333");
+		v.push_back("44444444444444444444444");
+		v.push_back("55555555555555555555555");
+		for (auto& e : v)
+		{
+			cout << e << " ";
+		}
+
+	}
+
 }
