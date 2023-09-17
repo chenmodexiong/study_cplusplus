@@ -5,7 +5,8 @@ namespace lzb
 {
 	//库里面并没有支持vector，pop_front效率太低，而是用list
 	//template<class T, class Container = vector<T>>
-	template<class T, class Container = list<T>>
+	//template<class T, class Container = list<T>>
+	template<class T, class Container = deque<T>>
 	class queue
 	{
 	public:

@@ -2,7 +2,8 @@
 
 namespace lzb
 {
-	template<class T, class Container=vector<T>>
+	//template<class T, class Container = vector<T>>
+	template<class T, class Container=deque<T>>
 	class stack
 	{
 	public:
