@@ -1,4 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
 using namespace std;
 
 //列表初始化
@@ -21,18 +27,18 @@ using namespace std;
 //	return 0;
 //}
 //构造函数也可列表初始化
-//class Date {
-//public:
-//	Date(int year, int month, int day)
-//		:_year(year), _month(month), _day(day) {
-//		cout << "Date(int year,int month,int day) " << endl;
-//	}
-//
-//private:
-//	int _year;
-//	int _month;
-//	int _day;
-//};
+class Date {
+public:
+	Date(int year, int month, int day)
+		:_year(year), _month(month), _day(day) {
+		cout << "Date(int year,int month,int day) " << endl;
+	}
+
+private:
+	int _year;
+	int _month;
+	int _day;
+};
 //int main() {
 //	//old style
 //	Date d1(2023, 10, 18);
@@ -67,6 +73,7 @@ using namespace std;
 //	return 0;
 //}
 
+//自定义类型实现{}列表初始化
 namespace bit
 {
 	template<class T>
@@ -100,4 +107,71 @@ namespace bit
 		iterator _endofstorage;
 	};
 }
+//int main()
+//{
+//	bit::vector<int> v = { 1,2,3,4 };
+//	std::vector<int> v2 = { 1,2,3,4 };
+//	auto il = { 1,2,3,4 };
+//	cout << typeid(v).name() << endl;
+//	cout << typeid(v2).name() << endl;
+//	cout << typeid(il).name() << endl;
+//	return 0;
+//}
+
+//auto
+//int main()
+//{
+//	auto val1 = "1111111111111111111111";
+//	auto val2 = { 1,2,3,4 };
+//	auto val3 = strcpy;
+//	auto val4 = main;
+//	cout << typeid(val1).name() << endl;
+//	cout << typeid(val2).name() << endl;
+//	cout << typeid(val3).name() << endl;
+//	cout << typeid(val4).name() << endl;
+//	map<string, string> dict = { {"sort", "排序"}, {"insert", "插入"} };
+//	//map<string, string>::iterator it = dict.begin();
+//	auto it = dict.begin();
+//	cout << typeid(it).name() << endl;
+//	return 0;
+//}
+
+
+// decltype的一些使用使用场景
+template<class T1, class T2>
+void F(T1 t1, T2 t2)
+{
+	decltype(t1 * t2) ret;
+	cout << typeid(ret).name() << endl;
+}
+//int main()
+//{
+//	const int x = 1;
+//	double y = 2.2;
+//	decltype(x * y) ret; // ret的类型是double
+//	decltype(&x) p; // p的类型是int*
+//	cout << typeid(ret).name() << endl;
+//	cout << typeid(p).name() << endl;
+//	F(1, 'a');
+//	return 0;
+//}
+
+//
+//由于C++中NULL被定义成字面量0，这样就可能回带来一些问题，因为0既能指针常量，又能表示
+//整形常量。所以出于清晰和安全的角度考虑，C++11中新增了nullptr，用于表示空指针
+//#ifndef NULL
+//#ifdef __cplusplus
+//#define NULL 0
+//#else
+//#define NULL ((void *)0)
+//#endif
+//#endif
+// 
+//int main()
+//{
+//	NULL;
+//	nullptr;
+//	return 0;
+//}
+
 
