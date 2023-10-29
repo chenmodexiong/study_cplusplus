@@ -1,38 +1,126 @@
-#include <iostream>
+ï»¿#include <iostream>
+#include <functional>
 using namespace std;
-//function°ü×°Æ÷ Ò²½Ğ×÷ÊÊÅäÆ÷¡£C++ÖĞµÄfunction±¾ÖÊÊÇÒ»¸öÀàÄ£°å£¬Ò²ÊÇÒ»¸ö°ü×°Æ÷¡£
+//functionåŒ…è£…å™¨ ä¹Ÿå«ä½œé€‚é…å™¨ã€‚C++ä¸­çš„functionæœ¬è´¨æ˜¯ä¸€ä¸ªç±»æ¨¡æ¿ï¼Œä¹Ÿæ˜¯ä¸€ä¸ªåŒ…è£…å™¨ã€‚
 //ret = func(x);
-// ÉÏÃæfunc¿ÉÄÜÊÇÊ²Ã´ÄØ£¿ÄÇÃ´func¿ÉÄÜÊÇº¯ÊıÃû£¿º¯ÊıÖ¸Õë£¿º¯Êı¶ÔÏó(·Âº¯Êı¶ÔÏó)£¿Ò²ÓĞ¿ÉÄÜ
-//ÊÇlamber±í´ïÊ½¶ÔÏó£¿ËùÒÔÕâĞ©¶¼ÊÇ¿Éµ÷ÓÃµÄÀàĞÍ£¡Èç´Ë·á¸»µÄÀàĞÍ£¬¿ÉÄÜ»áµ¼ÖÂÄ£°åµÄĞ§ÂÊµÍÏÂ£¡
-template<class F, class T>
-T useF(F f, T x)
-{
-	static int count = 0;
-	cout << "count:" << ++count << endl;
-	cout << "count:" << &count << endl;
-	return f(x);
-}
-double f(double i)
-{
-	return i / 2;
-}
-struct Functor
-{
-	double operator()(double d)
-	{
-		return d / 3;
-	}
-};
+// ä¸Šé¢funcå¯èƒ½æ˜¯ä»€ä¹ˆå‘¢ï¼Ÿé‚£ä¹ˆfuncå¯èƒ½æ˜¯å‡½æ•°åï¼Ÿå‡½æ•°æŒ‡é’ˆï¼Ÿå‡½æ•°å¯¹è±¡(ä»¿å‡½æ•°å¯¹è±¡)ï¼Ÿä¹Ÿæœ‰å¯èƒ½
+//æ˜¯lamberè¡¨è¾¾å¼å¯¹è±¡ï¼Ÿæ‰€ä»¥è¿™äº›éƒ½æ˜¯å¯è°ƒç”¨çš„ç±»å‹ï¼å¦‚æ­¤ä¸°å¯Œçš„ç±»å‹ï¼Œå¯èƒ½ä¼šå¯¼è‡´æ¨¡æ¿çš„æ•ˆç‡ä½ä¸‹ï¼
+//template<class F, class T>
+//T useF(F f, T x)
+//{
+//	static int count = 0;
+//	cout << "count:" << ++count << endl;
+//	cout << "count:" << &count << endl;
+//	return f(x);
+//}
+//double f(double i)
+//{
+//	return i / 2;
+//}
+//struct Functor
+//{
+//	double operator()(double d)
+//	{
+//		return d / 3;
+//	}
+//};
+//int main()
+//{
+//	// å‡½æ•°å
+//	cout << useF(f, 11.11) << endl;
+//	// å‡½æ•°å¯¹è±¡
+//	cout << useF(Functor(), 11.11) << endl;
+//	// lamberè¡¨è¾¾å¼
+//	cout << useF([](double d)->double { return d / 4; }, 11.11) << endl;
+//	return 0;
+//}
+// 
+//int f(int a, int b) {
+//	return a + b;
+//}
+//struct Functor
+//{
+//public:
+//	int operator() (int a, int b) {
+//		return a + b;
+//	}
+//};
+//class Plus
+//{
+//public:
+//	static int plusi(int a, int b) {
+//		return a + b;
+//	}
+//	double plusd(double a, double b) {
+//		return a + b;
+//	}
+//};
+//int main()
+//{
+//	// å‡½æ•°å(å‡½æ•°æŒ‡é’ˆ)
+//	std::function<int(int, int)> func1 = f;
+//	cout << func1(1, 2) << endl;
+//	// å‡½æ•°å¯¹è±¡
+//	std::function<int(int, int)> func2 = Functor();
+//	cout << func2(1, 2) << endl;
+//	// lamberè¡¨è¾¾å¼
+//	std::function<int(int, int)> func3 = [](const int a, const int b)
+//	{return a + b; };
+//	cout << func3(1, 2) << endl;
+//	// ç±»çš„æˆå‘˜å‡½æ•°
+//	std::function<int(int, int)> func4 = &Plus::plusi;
+//	cout << func4(1, 2) << endl;
+//	std::function<double(Plus, double, double)> func5 = &Plus::plusd;
+//	cout << func5(Plus(), 1.1, 2.2) << endl;
+//	return 0;
+//}
+
+
+#include <vector>
+
+using namespace std;
+//
+//int main(void)
+//{
+//	vector<int>array;
+//	array.push_back(100);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(500);
+//	vector<int>::iterator itor;
+//	for (itor = array.begin(); itor != array.end(); itor++)
+//	{
+//		if (*itor == 300)
+//		{
+//			itor = array.erase(itor);
+//		}
+//	}
+//	for (itor = array.begin(); itor != array.end(); itor++)
+//	{
+//		cout << *itor << " ";
+//	}
+//	return 0;
+//}
+
 int main()
 {
-	// º¯ÊıÃû
-	cout << useF(f, 11.11) << endl;
-	// º¯Êı¶ÔÏó
-	cout << useF(Functor(), 11.11) << endl;
-	// lamber±í´ïÊ½
-	cout << useF([](double d)->double { return d / 4; }, 11.11) << endl;
-	return 0;
+	int ar[] = { 1,2,3,4,5,6,7,8,9,10 };
+	int n = sizeof(ar) / sizeof(int);
+	vector<int> v(ar, ar + n);
+	cout << v.size() << ":" << v.capacity() << endl;
+	v.reserve(100);
+	v.resize(20);
+	cout << v.size() << ":" << v.capacity() << endl;
+	v.reserve(50);
+	v.resize(5);
+	cout << v.size() << ":" << v.capacity() << endl;
 }
+
+
+
+
 
 
 
